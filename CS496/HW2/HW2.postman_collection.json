@@ -1,0 +1,754 @@
+{
+	"variables": [],
+	"info": {
+		"name": "HW2",
+		"_postman_id": "180b3bc5-d460-ee29-dcda-d0ba4ab457c1",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Getting public Gists returns 30 Gists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var gistsReturned = JSON.parse(responseBody);",
+							"tests[\"Getting public Gists returns 30 Gists\"] = (gistsReturned.length === 30);",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://api.github.com/gists",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}",
+						"description": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"description": "1. Getting public Gists returns 30 Gists"
+			},
+			"response": []
+		},
+		{
+			"name": "2. Confirm that the user `wolfordj` has at least one public Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var gistsReturned = JSON.parse(responseBody);",
+							"",
+							"tests[\"Confirm that the user 'wolfordj' has at least one public Gist\"] = gistsReturned.length >= 1;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/users/wolfordj/gists?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"users",
+						"wolfordj",
+						"gists"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "2. Confirm that the user `wolfordj` has at least one public Gist"
+			},
+			"response": []
+		},
+		{
+			"name": "3.1 Confirm that when you create a Gist the number of Gists associated to your account increases by 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var gistsReturned = JSON.parse(responseBody);",
+							"var check = JSON.stringify(gistsReturned);",
+							"",
+							"postman.setGlobalVariable(\"numGists\", gistsReturned.length);",
+							"console.log(\"step 3.1\");",
+							"console.log(\"Numgists: \" + globals.numGists);",
+							"console.log(\"gistURL: \" + globals.gistURL);",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/users/JeffLoo-ong/gists?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"users",
+						"JeffLoo-ong",
+						"gists"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Prime the global variable of numGists"
+			},
+			"response": []
+		},
+		{
+			"name": "3.2 Confirm that when you create a Gist the number of Gists associated to your account increases by 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var gistsReturned = JSON.parse(responseBody);",
+							"postman.clearEnvironmentVariable(\"gistID\");",
+							"postman.setEnvironmentVariable(\"gistID\", gistsReturned.id);",
+							"    ",
+							"console.log(\"step 3.2\");",
+							"console.log(\"GistID: \" + environment.gistID);",
+							"postman.setGlobalVariable(\"gistFile\", JSON.stringify(gistsReturned.files));",
+							"console.log(\"gistFile: \" + globals.gistFile);",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"description\": \"Mop\",\n\t\"public\": true,\n\t\"files\": {\n\t\t\"Booyakasha.txt\": {\n\t\t\t\"content\": \"phrasing\"\n\t\t}\n\t}\n}"
+				},
+				"description": "Create a gist"
+			},
+			"response": []
+		},
+		{
+			"name": "3.3 Confirm that when you create a Gist the number of Gists associated to your account increases by 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var gistsReturned = JSON.parse(responseBody);",
+							"",
+							"// Handle the case when there is no gist yet",
+							"if(globals.numGists === null){",
+							"    postman.setGlobalVariable(\"variable_key\", 0);",
+							"}",
+							"",
+							"tests[\"Verify that a gist was added to 'JeffLoo-ong'\"] = gistsReturned.length === ((parseInt(globals.numGists))+1);",
+							"",
+							"console.log(\"Step 3.3\");",
+							"console.log(\"numgists: \" + globals.numGists + \" gistsReturned: \" + gistsReturned.length);",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/users/JeffLoo-ong/gists?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"users",
+						"JeffLoo-ong",
+						"gists"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "4. Confirm that the contents of the Gist you created match the contents you sent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var gistReturned = JSON.parse(responseBody);",
+							"console.log(\"step 4\");",
+							"console.log(\"gistFile: \" + globals.gistFile);",
+							"console.log(\"gistReturnedFile: \" + JSON.stringify(gistReturned.files));",
+							"var data = JSON.stringify(gistReturned.files);",
+							"",
+							"",
+							"tests[\"Confirm that the contents of the Gist you created match the contents you sent\"] = JSON.stringify(gistReturned.files) === globals.gistFile;",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "5. Confirm that you are able to edit the contents of a Gist (this will require editing it and proving the edits worked)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var gistReturned = JSON.parse(responseBody);",
+							"",
+							"tests[\"Confirm edits were made on \" + globals.gistID] = JSON.stringify(gistReturned.files) !== globals.gistFile;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"description\": \"Mawp\",\n\t\"public\": true,\n\t\"files\": {\n\t\t\"Booyakasha.txt\": {\n\t\t\t\"content\": \"phrasing!\"\n\t\t}\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "6.1 Confirm that you can add a star to a Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 404, indicating not starred\"] = responseCode.code === 404;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}/star?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}",
+						"star"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Make sure the gist isn't already starred"
+			},
+			"response": []
+		},
+		{
+			"name": "6.2 Confirm that you can add a star to a Gist",
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}/star?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}",
+						"star"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Length",
+						"value": "0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Star the gist just created earlier"
+			},
+			"response": []
+		},
+		{
+			"name": "6.3 Confirm that you can add a star to a Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 204, indicating it is starred\"] = responseCode.code === 204;",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}/star?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}",
+						"star"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Confirm that the gist is starred"
+			},
+			"response": []
+		},
+		{
+			"name": "7. Confirm that your list of Starred gists is correct",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"console.log(\"7\");",
+							"",
+							"console.log(\"jsonDataId: \" + jsonData[0].id);",
+							"",
+							"console.log(\"EnvID: \" + environment.gistID);",
+							"",
+							"tests[\"Confirm that the ID of the gist starred is correct\"] = jsonData[0].id === environment.gistID;",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/starred?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"starred"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "8.1 Confirm that you can delete a star from a Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 204, gist has been unstarred\"] = responseCode.code === 204;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}/star?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}",
+						"star"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "8.2 Confirm that you can delete a star from a Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 404, confirming the gist is not starred\"] = responseCode.code === 404;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}/star?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}",
+						"star"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "9.1 Confirm you can delete a Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Check that a gist exists\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Ensure a gist exists before deletion"
+			},
+			"response": []
+		},
+		{
+			"name": "9.2 Confirm you can delete a Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 204, indicating a successful gist delete\"] = responseCode.code === 204;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": "Actually delete the gist"
+			},
+			"response": []
+		},
+		{
+			"name": "9.3 Confirm you can delete a Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 404, gist does not exist\"] = responseCode.code === 404;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "https://api.github.com/gists/{{gistID}}?access_token=7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{gistID}}"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "7eb7468c4d8743cf0b1a2b8647718d462f0f94d5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Check to make sure it doesn't exist"
+			},
+			"response": []
+		}
+	]
+}
